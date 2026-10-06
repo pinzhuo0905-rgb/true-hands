@@ -12,8 +12,8 @@
 ## 工作方式
 
 ```
-D:\\work\\my-project\\        ← 这里有 .gui-only.json
-├── .gui-only.json            ← 约束声明
+D:\\work\\my-project\\        ← 这里有 .true-hands.json
+├── .true-hands.json            ← 约束声明
 ├── src\\...
 └── sub\\dir\\                  ← 在这里启动程序
 ```
@@ -47,9 +47,9 @@ from typing import Any
 from ..policy.guard import Guard
 
 CONFIG_NAMES: tuple[str, ...] = (
-    ".gui-only.json",
-    ".gui-only.yaml",
-    ".gui-only.yml",
+    ".true-hands.json",
+    ".true-hands.yaml",
+    ".true-hands.yml",
 )
 
 #: 向上查找的最大层数，避免爬到盘根
@@ -124,7 +124,7 @@ class ProjectScope:
                 "当前目录及其上级都没有找到 "
                 f"{' / '.join(CONFIG_NAMES)}。\n"
                 "如果你希望这个文件夹内强制「只准操作界面」，"
-                "请先运行：gui-only-agent project init"
+                "请先运行：true-hands project init"
             )
         return scope
 
@@ -186,6 +186,6 @@ def _read_config(path: Path) -> dict[str, Any]:
     except ImportError as exc:  # pragma: no cover - 取决于环境
         raise ScopeNotFound(
             f"{path.name} 是 YAML 格式，但未安装 PyYAML。\n"
-            "请执行 pip install pyyaml，或改用 .gui-only.json。"
+            "请执行 pip install pyyaml，或改用 .true-hands.json。"
         ) from exc
     return yaml.safe_load(text) or {}

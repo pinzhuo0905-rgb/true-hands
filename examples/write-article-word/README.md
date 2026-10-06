@@ -58,10 +58,10 @@
 
 ```bash
 # 空跑（mock 驱动，不碰真实桌面）
-gui-only-agent run --task write_article --dry-run
+true-hands run --task write_article --dry-run
 
 # 真实执行
-gui-only-agent run --task write_article \
+true-hands run --task write_article \
   --title "论界面操作的必要性" \
   --body "当 AI 可以直接调用文件接口时，我们无法确认它是否真的理解了软件界面。" \
   --driver-command "C:\Users\<你>\.local\bin\windows-mcp.exe" \

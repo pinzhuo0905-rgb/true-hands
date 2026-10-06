@@ -3,23 +3,23 @@
 用法示例::
 
     # 在当前文件夹建立「只准操作界面」的约束
-    gui-only-agent project init
+    true-hands project init
 
     # 看看当前目录落在哪个项目约束里
-    gui-only-agent project status
+    true-hands project status
 
     # 查看约束规则
-    gui-only-agent policy
+    true-hands policy
 
     # 空跑（不碰真实桌面）
-    gui-only-agent run --task write_article --driver mock
+    true-hands run --task write_article --driver mock
 
     # 用内置驱动真实执行（Windows 开箱可用，无需外部 MCP）
-    gui-only-agent run --task write_article \
+    true-hands run --task write_article \
         --title "My Article" --body "..." --driver native
 
     # 用 MCP 驱动执行（跨平台）
-    gui-only-agent run --task write_article \
+    true-hands run --task write_article \
         --driver mcp --driver-command computer-use-linux
 """
 
@@ -58,7 +58,7 @@ console = Console()
 @app.command()
 def version() -> None:
     """显示版本。"""
-    console.print(f"gui-only-agent {__version__}")
+    console.print(f"true-hands {__version__}")
 
 
 @app.command()
@@ -88,7 +88,7 @@ def project_init(
     note: str = typer.Option("", help="备注，例如「本项目内 Agent 只能操作界面」"),
     force: bool = typer.Option(False, "--force", help="覆盖已存在的配置"),
 ) -> None:
-    """在当前文件夹写入 .gui-only.json，把这个文件夹变成受约束的项目。"""
+    """在当前文件夹写入 .true-hands.json，把这个文件夹变成受约束的项目。"""
     root = Path(directory).resolve()
     target = root / CONFIG_NAMES[0]
     if target.exists() and not force:
@@ -158,7 +158,7 @@ def run(
         else:
             console.print(
                 "[dim]未发现项目约束。若希望这个文件夹内强制「只准操作界面」，"
-                "运行：gui-only-agent project init[/dim]"
+                "运行：true-hands project init[/dim]"
             )
 
     # --- 2. 策略网关（项目优先） -------------------------------------------

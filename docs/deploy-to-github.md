@@ -5,7 +5,7 @@
 ## 一、仓库结构
 
 ```
-gui-only-agent/
+true-hands/
 ├── README.md                      # 门面：为什么做、怎么做、怎么用
 ├── LICENSE                        # MIT
 ├── CONTRIBUTING.md                # 贡献指南（强调"改约束需论证"）
@@ -13,7 +13,7 @@ gui-only-agent/
 ├── .env.example                   # 配置模板（不含真实密钥）
 ├── pyproject.toml                 # 打包 + 依赖 + 工具配置
 │
-├── src/gui_only_agent/            # 源码（src 布局，避免导入歧义）
+├── src/true_hands/            # 源码（src 布局，避免导入歧义）
 │   ├── __init__.py
 │   ├── cli.py                     # 命令行入口
 │   ├── policy/                    # ★ 强制约束层
@@ -62,7 +62,7 @@ gui-only-agent/
 
 | 文件 | 作用 | 要点 |
 |---|---|---|
-| `pyproject.toml` | 打包与依赖 | `requires-python >=3.10`；`[project.scripts]` 定义 `gui-only-agent` 命令；`[tool.setuptools.packages.find] where=["src"]` 配合 src 布局 |
+| `pyproject.toml` | 打包与依赖 | `requires-python >=3.10`；`[project.scripts]` 定义 `true-hands` 命令；`[tool.setuptools.packages.find] where=["src"]` 配合 src 布局 |
 | `.gitignore` | 排除不该入库的东西 | **务必排除 `.env`、`.venv/`、`runs/`**（runs 里有大量截图，会把仓库撑爆） |
 | `.env.example` | 配置模板 | 只放占位符，**绝不放真实密钥** |
 | `LICENSE` | 开源协议 | MIT，最宽松，便于他人复用 |
@@ -83,7 +83,7 @@ git status --ignored | grep -E "\.env$"   # 应该能看到 .env 被忽略
 ## 三、本地初始化
 
 ```bash
-cd gui-only-agent
+cd true-hands
 
 # 1. 初始化仓库
 git init -b main
@@ -93,7 +93,7 @@ git status --short          # 不应出现 .venv/ 和 .env
 
 # 3. 首次提交
 git add .
-git commit -m "feat: 初始化 gui-only-agent
+git commit -m "feat: 初始化 true-hands
 
 强制 AI 只能通过真实操作图形界面完成任务。
 
@@ -113,14 +113,14 @@ pytest -q
 
 ```bash
 gh auth login                 # 首次需要
-gh repo create gui-only-agent --public --source=. --remote=origin --push
+gh repo create true-hands --public --source=. --remote=origin --push
 ```
 
 ### 方式 B：手动创建
 
 ```bash
 # 先在网页上建一个空仓库（不要勾选 README / .gitignore / LICENSE）
-git remote add origin https://github.com/<你的用户名>/gui-only-agent.git
+git remote add origin https://github.com/<你的用户名>/true-hands.git
 git push -u origin main
 ```
 
@@ -158,4 +158,4 @@ python -m build
 twine upload dist/*
 ```
 
-发布后别人就能 `pip install gui-only-agent` 直接用。
+发布后别人就能 `pip install true-hands` 直接用。

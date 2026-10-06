@@ -69,7 +69,7 @@ class MCPDesktopDriver:
             {
                 "protocolVersion": "2024-11-05",
                 "capabilities": {},
-                "clientInfo": {"name": "gui-only-agent", "version": "0.1.0"},
+                "clientInfo": {"name": "true-hands", "version": "0.1.0"},
             },
         )
         self._server_info = result.get("serverInfo", {})

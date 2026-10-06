@@ -15,8 +15,8 @@
 ## 开发环境
 
 ```bash
-git clone https://github.com/your-name/gui-only-agent.git
-cd gui-only-agent
+git clone https://github.com/your-name/true-hands.git
+cd true-hands
 pip install -e ".[dev]"
 pytest -q
 ruff check src tests
@@ -40,7 +40,7 @@ docs(readme): 补充 macOS 驱动的配置示例
 
 ## 新增一个任务
 
-在 `src/gui_only_agent/tasks/` 下建文件，用 `Task` 描述目标与**界面验收方式**。
+在 `src/true_hands/tasks/` 下建文件，用 `Task` 描述目标与**界面验收方式**。
 
 ⚠️ 注意：`verify_prompt` 里**不能出现读文件、查数据库**这类验收方式——验收本身也必须是界面操作。
 

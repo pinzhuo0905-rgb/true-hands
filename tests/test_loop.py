@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from gui_only_agent.driver.mock import MockDriver
-from gui_only_agent.harness.loop import GUIOnlyHarness
-from gui_only_agent.model.provider import Decision
-from gui_only_agent.policy.guard import Guard
-from gui_only_agent.tasks.write_article import build_write_article
+from true_hands.driver.mock import MockDriver
+from true_hands.harness.loop import GUIOnlyHarness
+from true_hands.model.provider import Decision
+from true_hands.policy.guard import Guard
+from true_hands.tasks.write_article import build_write_article
 
 
 class ScriptedModel:

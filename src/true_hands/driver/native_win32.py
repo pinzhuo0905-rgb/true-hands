@@ -355,7 +355,7 @@ class NativeDesktopDriver:
 
         def _show() -> None:
             try:
-                user32.MessageBoxW(0, message or "", title or "GUI-Only Agent", 0x40)
+                user32.MessageBoxW(0, message or "", title or "TrueHands", 0x40)
             except Exception:  # noqa: BLE001 - 提示失败不应影响任务
                 pass
 

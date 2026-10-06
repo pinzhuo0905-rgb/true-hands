@@ -1,10 +1,10 @@
-# GUI-Only Agent
+# TrueHands
 
-> **An AI that can only use its hands — never the back door.**
+> **An AI that really operates the computer — and can prove it.**
 
-A constraint-enforced agent framework: the AI must complete tasks by **actually operating the graphical interface** — opening applications, clicking buttons, typing on the keyboard, hitting save — and is **forbidden** from calling file-write APIs, shell commands, HTTP requests, or any other shortcut.
+*True hands*: it genuinely works the interface — opening applications, clicking buttons, typing on the keyboard, hitting save — rather than quietly reaching for a file API, a shell command, or an HTTP request. And because every step is screenshotted and the result is verified **through the UI**, you can prove it did.
 
-It ships with a **built-in desktop driver** (Windows, zero third-party dependencies), so it works out of the box — no external MCP server required.
+It ships with a **built-in desktop driver** (Windows, zero third-party dependencies), so it works out of the box — no external MCP server required. The constraint is declared **per project folder**, so one directory can be strict while another is not.
 
 ---
 
@@ -45,14 +45,14 @@ This project solves exactly that problem: **seal off every shortcut, leaving int
 
 The constraint is not a global switch — it is declared **inside the project itself**, so one folder can be strict while another is not.
 
-Drop a `.gui-only.json` at the root of a folder, and **every task started anywhere under it** inherits that policy. In practice: *inside this project, the agent may only work by directly operating the computer.*
+Drop a `.true-hands.json` at the root of a folder, and **every task started anywhere under it** inherits that policy. In practice: *inside this project, the agent may only work by directly operating the computer.*
 
 ```bash
 # Turn the current folder into a GUI-only project
-gui-only-agent project init
+true-hands project init
 
 # See which project scope the current directory falls under
-gui-only-agent project status
+true-hands project status
 ```
 
 ```json
@@ -99,7 +99,7 @@ pip install -e .
 cp .env.example .env
 
 # 3. Run the "write an article in Word" task, using the built-in driver
-gui-only-agent run --task write_article \
+true-hands run --task write_article \
   --title "Why GUI-Only Constraints Matter" \
   --body "..." \
   --driver native
@@ -108,16 +108,16 @@ gui-only-agent run --task write_article \
 Dry-run without touching the real desktop:
 
 ```bash
-gui-only-agent run --task write_article --driver mock
+true-hands run --task write_article --driver mock
 ```
 
 ## Project structure
 
 ```
-gui-only-agent/
-├── src/gui_only_agent/
+true-hands/
+├── src/true_hands/
 │   ├── policy/        # ★ Enforcement layer: allowlist, denylist, violation detection
-│   ├── project/       # ★ Project scope: .gui-only.json discovery and application
+│   ├── project/       # ★ Project scope: .true-hands.json discovery and application
 │   ├── driver/        # Execution layer: native (Win32) / MCP / mock drivers
 │   ├── harness/       # Decision layer: observe-decide-act loop
 │   ├── evidence/      # Evidence layer: screenshots, action trace, reports

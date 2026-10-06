@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from gui_only_agent.policy.guard import Guard, PolicyViolation
-from gui_only_agent.project.scope import CONFIG_NAMES, ProjectScope, ScopeNotFound
+from true_hands.policy.guard import Guard, PolicyViolation
+from true_hands.project.scope import CONFIG_NAMES, ProjectScope, ScopeNotFound
 
 
 def _make_project(root: Path, **overrides) -> ProjectScope:

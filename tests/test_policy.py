@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import pytest
 
-from gui_only_agent.policy.guard import Guard, PolicyViolation
-from gui_only_agent.policy.rules import (
+from true_hands.policy.guard import Guard, PolicyViolation
+from true_hands.policy.rules import (
     ALLOWED_TOOLS,
     is_executable_forbidden,
     is_tool_allowed,
@@ -23,7 +23,7 @@ from gui_only_agent.policy.rules import (
 def test_allowed_and_forbidden_do_not_overlap() -> None:
     """白名单和黑名单不能有交集，否则规则自相矛盾。"""
     allowed = {name for group in ALLOWED_TOOLS.values() for name in group}
-    from gui_only_agent.policy.rules import FORBIDDEN_TOOLS
+    from true_hands.policy.rules import FORBIDDEN_TOOLS
 
     assert not (allowed & set(FORBIDDEN_TOOLS)), "白名单与黑名单存在重叠项"
 

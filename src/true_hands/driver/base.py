@@ -1,7 +1,7 @@
 """驱动抽象层。
 
 驱动只负责「执行一个原子动作」，**不做任何决策、不做任何策略判断**——
-策略判断在 :mod:`gui_only_agent.policy` 里完成，职责严格分离。
+策略判断在 :mod:`true_hands.policy` 里完成，职责严格分离。
 """
 
 from __future__ import annotations
@@ -48,8 +48,8 @@ class Driver(Protocol):
     """桌面驱动协议。
 
     任何实现都可以接入——只要它能「看屏幕」和「动手」。
-    内置实现见 :mod:`gui_only_agent.driver.mcp_client` 与
-    :mod:`gui_only_agent.driver.mock`。
+    内置实现见 :mod:`true_hands.driver.mcp_client` 与
+    :mod:`true_hands.driver.mock`。
     """
 
     def list_tools(self) -> list[str]:

@@ -9,8 +9,8 @@ from __future__ import annotations
 import sys
 import traceback
 
-from gui_only_agent.policy.guard import Guard, PolicyViolation
-from gui_only_agent.policy.rules import (
+from true_hands.policy.guard import Guard, PolicyViolation
+from true_hands.policy.rules import (
     ALLOWED_TOOLS,
     FORBIDDEN_TOOLS,
     is_executable_forbidden,
@@ -33,7 +33,7 @@ def check(name: str, condition: bool) -> None:
 
 def main() -> int:
     print("=" * 64)
-    print("gui-only-agent 约束层自检")
+    print("true-hands 约束层自检")
     print("=" * 64)
 
     print("\n[1] 规则表自洽")
@@ -110,10 +110,10 @@ def main() -> int:
 
     # ---------------------------------------------------------------
     print("\n[8] 决策循环（mock 驱动，不碰真实桌面）")
-    from gui_only_agent.driver.mock import MockDriver
-    from gui_only_agent.harness.loop import GUIOnlyHarness
-    from gui_only_agent.model.provider import Decision
-    from gui_only_agent.tasks.write_article import build_write_article
+    from true_hands.driver.mock import MockDriver
+    from true_hands.harness.loop import GUIOnlyHarness
+    from true_hands.model.provider import Decision
+    from true_hands.tasks.write_article import build_write_article
 
     class ScriptedModel:
         def __init__(self, script):
@@ -167,7 +167,7 @@ def main() -> int:
     import tempfile
     from pathlib import Path
 
-    from gui_only_agent.project.scope import ProjectScope, ScopeNotFound
+    from true_hands.project.scope import ProjectScope, ScopeNotFound
 
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp) / "my-project"
@@ -182,7 +182,7 @@ def main() -> int:
             check("无配置时返回 None", False)
 
         # 9.2 建立约束
-        cfg = root / ".gui-only.json"
+        cfg = root / ".true-hands.json"
         scope = ProjectScope(
             root=root, config_path=cfg, enforce=True, mode="gui-only",
             max_steps=77, note="本项目内 Agent 只能操作界面",
@@ -207,7 +207,7 @@ def main() -> int:
             check("项目约束下仍拦截写文件", True)
 
         # 9.5 审计模式的项目
-        audit_cfg = Path(tmp) / "audit-project" / ".gui-only.json"
+        audit_cfg = Path(tmp) / "audit-project" / ".true-hands.json"
         audit_cfg.parent.mkdir(parents=True)
         ProjectScope(
             root=audit_cfg.parent, config_path=audit_cfg,
@@ -217,7 +217,7 @@ def main() -> int:
         check("audit 模式项目放行但记账", g_audit.mode == "audit")
 
         # 9.6 enforce=false 时不强制
-        off_cfg = Path(tmp) / "free-project" / ".gui-only.json"
+        off_cfg = Path(tmp) / "free-project" / ".true-hands.json"
         off_cfg.parent.mkdir(parents=True)
         ProjectScope(
             root=off_cfg.parent, config_path=off_cfg, enforce=False,

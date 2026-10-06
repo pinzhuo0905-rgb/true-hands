@@ -3,13 +3,13 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gui-only-agent"
+name = "true-hands"
 version = "0.1.0"
-description = "强制 AI 只能通过真实操作图形界面完成任务的 Agent 框架"
+description = "An AI that really operates the computer — and can prove it. Built-in desktop driver, UI-only enforcement, project-scoped policy."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "gui-only-agent contributors" }]
+authors = [{ name = "true-hands contributors" }]
 keywords = ["ai-agent", "gui-automation", "computer-use", "mcp", "evaluation"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -37,17 +37,17 @@ dev = [
 imaging = [
   "pillow>=10.0",
 ]
-# 想用 .gui-only.yaml 而不是 .gui-only.json
+# 想用 .true-hands.yaml 而不是 .true-hands.json
 yaml = [
   "pyyaml>=6.0",
 ]
 
 [project.scripts]
-gui-only-agent = "gui_only_agent.cli:app"
+true-hands = "true_hands.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/your-name/gui-only-agent"
-Issues = "https://github.com/your-name/gui-only-agent/issues"
+Homepage = "https://github.com/pinzhuo0905-rgb/true-hands"
+Issues = "https://github.com/pinzhuo0905-rgb/true-hands/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
