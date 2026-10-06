@@ -18,6 +18,12 @@ from true_hands.policy.rules import (
     looks_like_shell_window,
 )
 
+# Windows 控制台默认编码不是 UTF-8，直接 print "✓" 会抛 UnicodeEncodeError。
+# CI 的 windows-latest 就是这样挂的，所以这里先把标准流切到 UTF-8。
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 PASS, FAIL = 0, 0
 
 
@@ -163,11 +169,10 @@ def main() -> int:
     check("连续偷懒会中止", res3.success is False and "中止" in res3.summary)
 
     print("\n[9] 项目作用域（约束跟着文件夹走）")
-    import json as _json
     import tempfile
     from pathlib import Path
 
-    from true_hands.project.scope import ProjectScope, ScopeNotFound
+    from true_hands.project.scope import ProjectScope
 
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp) / "my-project"

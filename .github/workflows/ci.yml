@@ -10,6 +10,11 @@ jobs:
   test:
     name: 测试 (${{ matrix.os }} / py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
+    # windows-latest 的控制台默认不是 UTF-8，脚本里的 ✓ 和中文会触发
+    # UnicodeEncodeError。这两行让整个 job 跑在 UTF-8 模式。
+    env:
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
     strategy:
       fail-fast: false
       matrix:
@@ -30,7 +35,7 @@ jobs:
           pip install -e ".[dev]"
 
       - name: 代码风格检查
-        run: ruff check src tests
+        run: ruff check src tests scripts
 
       - name: 运行测试
         run: pytest -q
