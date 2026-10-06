@@ -87,7 +87,7 @@ class MCPDesktopDriver:
         finally:
             self._proc = None
 
-    def __enter__(self) -> "MCPDesktopDriver":
+    def __enter__(self) -> MCPDesktopDriver:
         self.start()
         return self
 

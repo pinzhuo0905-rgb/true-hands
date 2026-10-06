@@ -79,7 +79,7 @@ class ProjectScope:
 
     # -- 构造 ---------------------------------------------------------------
     @classmethod
-    def load(cls, config_path: str | Path) -> "ProjectScope":
+    def load(cls, config_path: str | Path) -> ProjectScope:
         """从配置文件加载。"""
         path = Path(config_path).resolve()
         if not path.exists():
@@ -99,7 +99,7 @@ class ProjectScope:
         )
 
     @classmethod
-    def discover(cls, start: str | Path | None = None) -> "ProjectScope | None":
+    def discover(cls, start: str | Path | None = None) -> ProjectScope | None:
         """从 ``start``（默认当前工作目录）逐级向上查找项目配置。
 
         返回最近的一个，找不到返回 ``None``。
@@ -117,7 +117,7 @@ class ProjectScope:
         return None
 
     @classmethod
-    def discover_or_raise(cls, start: str | Path | None = None) -> "ProjectScope":
+    def discover_or_raise(cls, start: str | Path | None = None) -> ProjectScope:
         scope = cls.discover(start)
         if scope is None:
             raise ScopeNotFound(

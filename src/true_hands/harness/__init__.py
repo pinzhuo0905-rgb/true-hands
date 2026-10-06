@@ -3,4 +3,4 @@
 from .loop import GUIOnlyHarness, RunResult
 from .verifier import GUIVerifier, Verifier
 
-__all__ = ["GUIOnlyHarness", "RunResult", "Verifier", "GUIVerifier"]
+__all__ = ["GUIOnlyHarness", "GUIVerifier", "RunResult", "Verifier"]

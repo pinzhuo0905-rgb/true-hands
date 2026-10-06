@@ -55,6 +55,17 @@ where = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# 显式锁定规则集：ruff 的默认规则会随版本变化，不锁定的话 CI 会时红时绿
+select = ["E", "F", "W", "I", "UP", "RUF"]
+ignore = [
+  "E501",    # 行长交给 formatter 处理
+  "RUF001",  # 全角标点：中文注释与文档字符串里是正常的
+  "RUF002",
+  "RUF003",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

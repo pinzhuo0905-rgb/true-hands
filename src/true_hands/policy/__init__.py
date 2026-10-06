@@ -10,11 +10,11 @@ from .rules import (
 )
 
 __all__ = [
+    "ALLOWED_TOOLS",
+    "FORBIDDEN_EXECUTABLES",
+    "FORBIDDEN_TOOLS",
+    "SHELL_WINDOW_HINTS",
     "Guard",
     "PolicyViolation",
-    "ALLOWED_TOOLS",
-    "FORBIDDEN_TOOLS",
-    "FORBIDDEN_EXECUTABLES",
-    "SHELL_WINDOW_HINTS",
     "is_tool_allowed",
 ]

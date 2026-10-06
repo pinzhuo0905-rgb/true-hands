@@ -22,8 +22,8 @@ import time
 from ctypes import wintypes
 from pathlib import Path
 
-from .base import ActionResult, Observation
 from ..policy.guard import Action
+from .base import ActionResult, Observation
 
 # ---------------------------------------------------------------------------
 # Win32 绑定
@@ -133,8 +133,8 @@ def _virtual_screen() -> tuple[int, int, int, int]:
 
 def _to_absolute(x: int, y: int) -> tuple[int, int]:
     vx, vy, vw, vh = _virtual_screen()
-    nx = int(round((x - vx) * 65535 / max(vw - 1, 1)))
-    ny = int(round((y - vy) * 65535 / max(vh - 1, 1)))
+    nx = round((x - vx) * 65535 / max(vw - 1, 1))
+    ny = round((y - vy) * 65535 / max(vh - 1, 1))
     return nx, ny
 
 
@@ -229,7 +229,7 @@ class NativeDesktopDriver:
             detail = handler(**action.args)
         except TypeError as exc:
             return ActionResult(ok=False, detail=f"参数不匹配：{exc}")
-        except Exception as exc:  # noqa: BLE001 - 驱动层兜底
+        except Exception as exc:
             return ActionResult(ok=False, detail=f"执行失败：{exc}")
         return ActionResult(ok=True, detail=detail or "ok", observation=self.observe())
 
@@ -356,7 +356,7 @@ class NativeDesktopDriver:
         def _show() -> None:
             try:
                 user32.MessageBoxW(0, message or "", title or "TrueHands", 0x40)
-            except Exception:  # noqa: BLE001 - 提示失败不应影响任务
+            except Exception:
                 pass
 
         threading.Thread(target=_show, daemon=True).start()
@@ -365,10 +365,10 @@ class NativeDesktopDriver:
     def _do_App(self, mode: str = "launch", name: str = "", executable: str = "", args=None, cwd=None, **_: object) -> str:
         if mode == "launch_executable" and executable:
             cmd = [executable, *(args or [])]
-            subprocess.Popen(cmd, cwd=cwd)  # noqa: S603
+            subprocess.Popen(cmd, cwd=cwd)
             return f"启动 {executable}"
         if name:
-            subprocess.Popen(f'start "" "{name}"', shell=True)  # noqa: S602
+            subprocess.Popen(f'start "" "{name}"', shell=True)
             return f"启动 {name}"
         return "未指定要启动的程序"
 

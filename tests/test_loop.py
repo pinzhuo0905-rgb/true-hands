@@ -16,7 +16,7 @@ class ScriptedModel:
         self.script = list(script)
         self.calls = 0
 
-    def decide(self, task_prompt, observation, history):  # noqa: ANN001
+    def decide(self, task_prompt, observation, history):
         self.calls += 1
         if self.script:
             return self.script.pop(0)

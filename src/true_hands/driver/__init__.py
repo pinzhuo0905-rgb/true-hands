@@ -5,10 +5,10 @@ from .mock import MockDriver
 from .native import create_native_driver, native_available
 
 __all__ = [
-    "Driver",
-    "Observation",
     "ActionResult",
+    "Driver",
     "MockDriver",
+    "Observation",
     "create_native_driver",
     "native_available",
 ]

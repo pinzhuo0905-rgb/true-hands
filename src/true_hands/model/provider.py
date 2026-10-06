@@ -25,7 +25,7 @@ class Decision:
     raw: str = ""
 
     @classmethod
-    def from_json(cls, text: str) -> "Decision":
+    def from_json(cls, text: str) -> Decision:
         """从模型输出里抠出 JSON（容忍 ```json 代码块）。"""
         cleaned = text.strip()
         if "```" in cleaned:
