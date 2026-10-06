@@ -59,6 +59,20 @@ def test_shell_window_detection(title: str) -> None:
     assert looks_like_shell_window(title)
 
 
+def test_executable_check_handles_both_path_separators() -> None:
+    """无论跑在哪个平台，Windows 与 POSIX 两种写法的路径都要能识别。
+
+    这是一个真实回归：早期实现用 ``os.path.basename``，在 Linux 上遇到
+    反斜杠路径会原样返回整串（``C:\\...\\cmd.exe``），从而漏判 ——
+    Ubuntu CI 的 pytest 就是这样挂的。
+    """
+    assert is_executable_forbidden(r"C:\Windows\System32\cmd.exe")
+    assert is_executable_forbidden("/usr/bin/bash")
+    assert is_executable_forbidden("/usr/local/bin/python3")
+    assert not is_executable_forbidden(r"C:\Windows\System32\notepad.exe")
+    assert not is_executable_forbidden("/usr/bin/gedit")
+
+
 def test_normal_window_is_not_flagged() -> None:
     assert not looks_like_shell_window("无标题 - 记事本")
     assert not looks_like_shell_window("Document1 - Microsoft Word")

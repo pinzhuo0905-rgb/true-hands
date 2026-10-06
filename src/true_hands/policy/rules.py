@@ -96,10 +96,13 @@ def is_tool_allowed(tool_name: str) -> bool:
 
 
 def is_executable_forbidden(path_or_name: str) -> bool:
-    """要启动的可执行文件是否属于禁止的 Shell / 解释器。"""
-    import os
+    """要启动的可执行文件是否属于禁止的 Shell / 解释器。
 
-    name = os.path.basename(path_or_name.strip().strip('"')).lower()
+    同时接受 ``C:\\Windows\\System32\\cmd.exe`` 和 ``/usr/bin/bash`` 两种写法——
+    不能依赖 ``os.path.basename``，因为它只认当前平台的分隔符，
+    在 Linux 上遇到 Windows 路径会原样返回整串，从而漏判。
+    """
+    name = path_or_name.strip().strip('"').replace("\\", "/").rsplit("/", 1)[-1].lower()
     return name in FORBIDDEN_EXECUTABLES
 
 

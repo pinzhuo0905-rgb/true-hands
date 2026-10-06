@@ -178,6 +178,9 @@ def main() -> int:
         root = Path(tmp) / "my-project"
         nested = root / "src" / "deep"
         nested.mkdir(parents=True)
+        # resolve() 会展开 Windows 临时目录里的 8.3 短名（RUNNER~1 → runneradmin）。
+        # discover() 返回的是 resolve 过的路径，这里必须对齐，否则在 CI 上不等。
+        root = root.resolve()
 
         # 9.1 没配置时找不到
         try:
