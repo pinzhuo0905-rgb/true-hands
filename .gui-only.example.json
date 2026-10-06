@@ -1,0 +1,9 @@
+{
+  "enforce": true,
+  "mode": "gui-only",
+  "max_steps": 60,
+  "require_gui_verification": true,
+  "allowed_tools": [],
+  "denied_tools": [],
+  "note": "本项目内 Agent 只能通过直接操控电脑来完成任务。"
+}

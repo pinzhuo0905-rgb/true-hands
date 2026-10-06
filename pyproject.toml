@@ -33,6 +33,14 @@ dev = [
   "ruff>=0.5",
   "mypy>=1.10",
 ]
+# 更好的截图（PNG、多屏）。不装则退回 GDI/BMP，仍可用。
+imaging = [
+  "pillow>=10.0",
+]
+# 想用 .gui-only.yaml 而不是 .gui-only.json
+yaml = [
+  "pyyaml>=6.0",
+]
 
 [project.scripts]
 gui-only-agent = "gui_only_agent.cli:app"

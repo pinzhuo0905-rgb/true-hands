@@ -162,6 +162,69 @@ def main() -> int:
     ).run(build_write_article("标题", "正文"))
     check("连续偷懒会中止", res3.success is False and "中止" in res3.summary)
 
+    print("\n[9] 项目作用域（约束跟着文件夹走）")
+    import json as _json
+    import tempfile
+    from pathlib import Path
+
+    from gui_only_agent.project.scope import ProjectScope, ScopeNotFound
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp) / "my-project"
+        nested = root / "src" / "deep"
+        nested.mkdir(parents=True)
+
+        # 9.1 没配置时找不到
+        try:
+            ProjectScope.discover(nested)
+            check("无配置时返回 None", ProjectScope.discover(nested) is None)
+        except Exception:
+            check("无配置时返回 None", False)
+
+        # 9.2 建立约束
+        cfg = root / ".gui-only.json"
+        scope = ProjectScope(
+            root=root, config_path=cfg, enforce=True, mode="gui-only",
+            max_steps=77, note="本项目内 Agent 只能操作界面",
+        )
+        scope.save()
+        check("配置文件已写入", cfg.is_file())
+
+        # 9.3 从深层子目录能向上找到
+        found = ProjectScope.discover(nested)
+        check("从子目录向上找到项目约束", found is not None)
+        check("定位到正确的项目根", found is not None and found.root == root)
+        check("读取到 max_steps", found is not None and found.max_steps == 77)
+        check("读取到 mode", found is not None and found.mode == "gui-only")
+
+        # 9.4 约束真的生效：网关按项目模式构造
+        g_scope = found.build_guard() if found else Guard()
+        check("项目约束下网关为 enforce", g_scope.mode == "enforce")
+        try:
+            g_scope.check("FileSystem", {"mode": "write", "path": "x"})
+            check("项目约束下仍拦截写文件", False)
+        except PolicyViolation:
+            check("项目约束下仍拦截写文件", True)
+
+        # 9.5 审计模式的项目
+        audit_cfg = Path(tmp) / "audit-project" / ".gui-only.json"
+        audit_cfg.parent.mkdir(parents=True)
+        ProjectScope(
+            root=audit_cfg.parent, config_path=audit_cfg,
+            enforce=True, mode="audit",
+        ).save()
+        g_audit = ProjectScope.discover(audit_cfg.parent).build_guard()
+        check("audit 模式项目放行但记账", g_audit.mode == "audit")
+
+        # 9.6 enforce=false 时不强制
+        off_cfg = Path(tmp) / "free-project" / ".gui-only.json"
+        off_cfg.parent.mkdir(parents=True)
+        ProjectScope(
+            root=off_cfg.parent, config_path=off_cfg, enforce=False,
+        ).save()
+        off = ProjectScope.discover(off_cfg.parent)
+        check("enforce=false 被正确读取", off is not None and off.enforce is False)
+
     print("\n" + "=" * 64)
     print(f"结果：通过 {PASS} 项，失败 {FAIL} 项")
     print("=" * 64)

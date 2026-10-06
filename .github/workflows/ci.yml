@@ -35,8 +35,17 @@ jobs:
       - name: 运行测试
         run: pytest -q
 
+      - name: 零依赖自检（不装 pytest 也能跑）
+        run: python scripts/selfcheck.py
+        env:
+          PYTHONPATH: src
+
       - name: 校验策略规则自洽（白/黑名单无重叠）
         run: python -c "from gui_only_agent.policy.rules import ALLOWED_TOOLS, FORBIDDEN_TOOLS; a={n for g in ALLOWED_TOOLS.values() for n in g}; assert not (a & set(FORBIDDEN_TOOLS)), '白名单与黑名单冲突'; print('OK')"
+        env:
+          PYTHONPATH: src
 
       - name: 打印策略清单（便于审查）
         run: python -m gui_only_agent.cli policy
+        env:
+          PYTHONPATH: src

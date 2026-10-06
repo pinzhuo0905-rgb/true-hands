@@ -4,6 +4,8 @@
 
 A constraint-enforced agent framework: the AI must complete tasks by **actually operating the graphical interface** — opening applications, clicking buttons, typing on the keyboard, hitting save — and is **forbidden** from calling file-write APIs, shell commands, HTTP requests, or any other shortcut.
 
+It ships with a **built-in desktop driver** (Windows, zero third-party dependencies), so it works out of the box — no external MCP server required.
+
 ---
 
 ## Why this exists
@@ -39,6 +41,54 @@ This project solves exactly that problem: **seal off every shortcut, leaving int
         └──────── ⑥ Screenshots + action trace recorded throughout ←┘
 ```
 
+## Project scope: the constraint follows the folder
+
+The constraint is not a global switch — it is declared **inside the project itself**, so one folder can be strict while another is not.
+
+Drop a `.gui-only.json` at the root of a folder, and **every task started anywhere under it** inherits that policy. In practice: *inside this project, the agent may only work by directly operating the computer.*
+
+```bash
+# Turn the current folder into a GUI-only project
+gui-only-agent project init
+
+# See which project scope the current directory falls under
+gui-only-agent project status
+```
+
+```json
+{
+  "enforce": true,
+  "mode": "gui-only",
+  "max_steps": 60,
+  "require_gui_verification": true,
+  "allowed_tools": [],
+  "denied_tools": [],
+  "note": "Inside this project the agent may only operate the computer directly."
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `enforce` | `true` blocks violations; `false` downgrades to audit-only |
+| `mode` | `gui-only` (strict) · `efficient` (allow shell) · `audit` (log only) |
+| `max_steps` | Step budget for this project |
+| `require_gui_verification` | Verification must also be done through the interface |
+| `allowed_tools` / `denied_tools` | Project-specific additions to the allow / deny lists |
+
+Discovery walks **up** from the current directory and stops at the nearest config, so nested projects work correctly.
+
+## Built-in desktop driver
+
+`--driver native` runs the bundled driver, implemented with `ctypes` calls straight into the Win32 API. **No third-party packages, no external process.**
+
+| Capability | How |
+|---|---|
+| Screenshot | Pillow if installed, otherwise GDI `BitBlt` + hand-written BMP — the zero-dependency path |
+| Mouse | `SendInput` (move / click / right-click / drag / scroll) |
+| Keyboard | `SendInput` with `KEYEVENTF_UNICODE`, so Chinese and other non-ASCII text work |
+| Hotkeys | Named keys resolved to virtual-key codes (`ctrl+s`, `alt+tab`, `win+r`, …) |
+| Windows | `GetForegroundWindow` / `GetWindowTextW` for the active window title |
+
 ## Quick start
 
 ```bash
@@ -48,11 +98,17 @@ pip install -e .
 # 2. Configure (see .env.example)
 cp .env.example .env
 
-# 3. Run the "write an article in Word" task
+# 3. Run the "write an article in Word" task, using the built-in driver
 gui-only-agent run --task write_article \
   --title "Why GUI-Only Constraints Matter" \
   --body "..." \
-  --save-to "$HOME/Desktop"
+  --driver native
+```
+
+Dry-run without touching the real desktop:
+
+```bash
+gui-only-agent run --task write_article --driver mock
 ```
 
 ## Project structure
@@ -61,7 +117,8 @@ gui-only-agent run --task write_article \
 gui-only-agent/
 ├── src/gui_only_agent/
 │   ├── policy/        # ★ Enforcement layer: allowlist, denylist, violation detection
-│   ├── driver/        # Execution layer: drives the real desktop over MCP
+│   ├── project/       # ★ Project scope: .gui-only.json discovery and application
+│   ├── driver/        # Execution layer: native (Win32) / MCP / mock drivers
 │   ├── harness/       # Decision layer: observe-decide-act loop
 │   ├── evidence/      # Evidence layer: screenshots, action trace, reports
 │   ├── tasks/         # Task definitions
@@ -75,15 +132,26 @@ gui-only-agent/
 
 ## Supported desktop drivers
 
-The framework connects to desktop drivers over the **MCP protocol**, so they are swappable:
+The framework talks to drivers through a small protocol, so they are swappable:
 
 | Driver | Platform | Notes |
 |---|---|---|
-| [Windows-MCP](https://github.com/CursorTouch/Windows-MCP) | Windows | Recommended, 20 tools |
-| [Cua Driver](https://github.com/trycua/cua) | Win/Mac/Linux | Supports background delivery |
-| [computer-use-linux](https://github.com/agent-sh/computer-use-linux) | Linux | Wayland-friendly |
-| [agent-desktop](https://github.com/lahfir/agent-desktop) | macOS | Semantic accessibility-tree operation |
-| `mock` | Any | Built in, used for testing |
+| `native` | Windows | **Built in.** `ctypes` into Win32, zero dependencies |
+| `mcp` + [Windows-MCP](https://github.com/CursorTouch/Windows-MCP) | Windows | External MCP server, 20 tools |
+| `mcp` + [Cua Driver](https://github.com/trycua/cua) | Win/Mac/Linux | Supports background delivery |
+| `mcp` + [computer-use-linux](https://github.com/agent-sh/computer-use-linux) | Linux | Wayland-friendly |
+| `mcp` + [agent-desktop](https://github.com/lahfir/agent-desktop) | macOS | Semantic accessibility-tree operation |
+| `mock` | Any | Built in, used for testing and CI |
+
+## Verifying it works
+
+A zero-dependency self-check exercises the whole constraint layer — no pytest required:
+
+```bash
+PYTHONPATH=src python scripts/selfcheck.py
+```
+
+It covers the rule tables, the gateway's blocking behaviour, the decision loop, and project-scope discovery.
 
 **The goal of this project is not to be convenient — it is to be trustworthy.**
 
