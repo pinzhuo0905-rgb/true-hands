@@ -1,5 +1,9 @@
 # TrueHands
 
+[![CI](https://github.com/pinzhuo0905-rgb/true-hands/actions/workflows/ci.yml/badge.svg)](https://github.com/pinzhuo0905-rgb/true-hands/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
+
 > **An AI that really operates the computer — and can prove it.**
 
 *True hands*: it genuinely works the interface — opening applications, clicking buttons, typing on the keyboard, hitting save — rather than quietly reaching for a file API, a shell command, or an HTTP request. And because every step is screenshotted and the result is verified **through the UI**, you can prove it did.
